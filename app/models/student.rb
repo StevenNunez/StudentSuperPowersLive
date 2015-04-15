@@ -37,4 +37,36 @@ class Student # students
       new_from_row(row)
     end.first
   end
+
+  def save
+    if persisted?
+      update
+    else
+      insert
+    end
+  end
+
+  def persisted?
+    !!id
+  end
+
+  def update
+    sql = <<-SQL
+      UPDATE students
+      SET name=?, super_power=?
+      WHERE id=?
+    SQL
+
+    @@db.execute(sql, [name, super_power, id])
+  end
+
+  def insert
+    sql = <<-SQL
+    INSERT INTO students (name, super_power)
+    VALUES (?,?)
+    SQL
+
+    @@db.execute(sql,[name, super_power])
+    self.id = Student.all.last.id
+  end
 end

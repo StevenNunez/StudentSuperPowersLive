@@ -25,4 +25,25 @@ describe Student do
     student = Student.find_by_name("Bam Bam")
     expect(student).to be_nil
   end
+
+  it "lets me save a student in the database" do
+    student = Student.new
+    student.name = "Bob"
+    student.super_power = "Talking to Ducks"
+    student.save
+    expect(student.id).not_to be_nil
+  end
+
+  it "lets me update an existing student" do
+    name = "Steven the one from the test, don't use this name anywhere please"
+    me = Student.new
+    me.name = name
+    me.save
+
+    me_from_db = Student.find_by_name(name)
+    me_from_db.name = "Something simpler"
+    me_from_db.save
+
+    expect(Student.find_by_name(name)).to be_nil
+  end
 end
